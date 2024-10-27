@@ -1,0 +1,1232 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/customsearch/v1",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyCEgMJJptP2AbAQTGCkBjY9A2uzYfxcWKw"
+            },
+            {
+              "name": "cx",
+              "value": "43e5022f5883d4e03"
+            },
+            {
+              "name": "q",
+              "value": "allintitle: (Hackathon OR Inovathon) -disputaram, -promoveu, -realizou, -ocorreu, -encerrado, -apresentam, -conquistaram, -conquistam, -ganhadores, -inscrições, -encerradas, -encerra, -apresentaram, -foram"
+            },
+            {
+              "name": "dateRestrict",
+              "value": "d3"
+            },
+            {
+              "name": "sort",
+              "value": "date"
+            },
+            {
+              "name": "gl",
+              "value": "br"
+            },
+            {
+              "name": "lr",
+              "value": "lang_pt"
+            },
+            {
+              "name": "start",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fa0e2b8c-2b52-4119-be5c-8d0f61748a32",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Obtenha o texto da entrada do nó anterior\nlet inputText = $json[\"output\"]; // Use o nome correto do campo do JSON anterior\n\n// Remove as aspas duplas do texto\nlet sanitizedText = inputText.replace(/\"/g, '');\n\n// Substitui as quebras de linha por \\n\nsanitizedText = sanitizedText.replace(/\\n/g, '\\\\n');\n\n// Envolva o texto sanitizado em um objeto JSON\nlet outputJson = { \"sanitizedText\": sanitizedText };\n\n// Retorne o JSON como saída do nó Code\nreturn outputJson;\n"
+      },
+      "id": "30818165-bd15-40d0-ae9a-c496d1de0852",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3000,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.aiblacksolutions.com/message/sendText/hacka_todo_dia ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "ve3vzw2uym76l7dpxih6g"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"120363349425694565@g.us\",\n  \"options\": {\n    \"delay\": 1200,\n    \"presence\": \"composing\",\n    \"linkPreview\": false\n  },\n  \"textMessage\": {\n    \"text\": \"{{ $json.sanitizedText }}\"\n  }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "id": "1752f911-931a-49ea-ae2b-2cb89429e232",
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3360,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $('Loop Over Items').context['done'] }}"
+        }
+      },
+      "id": "869dd4db-662c-43a8-b987-a04700284f26",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome do evento": "={{ $json.title }}",
+            "Descrição": "={{ $json.snippet }}",
+            "link": "={{ $json.link }}",
+            "Data": "={{ new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome do evento",
+              "displayName": "Nome do evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Descrição",
+              "displayName": "Descrição",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hoje",
+              "displayName": "Hoje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dbcbf586-6f98-4918-9b72-a19fda39d404",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1940,
+        480
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6HFnXjlEffzKigp1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54b12afa-f016-40ce-b8e8-4a48aee80c08",
+              "name": "items",
+              "value": "={{ $json.items }}",
+              "type": "array"
+            },
+            {
+              "id": "2b7ea572-878b-4a4f-b76c-dede92281f11",
+              "name": "={{ new Date().toLocaleDateString() }}",
+              "value": "const hoje = new Date(); const dataFormatada = hoje.getFullYear() + '-' + (hoje.getMonth() + 1).toString().padStart(2, '0') + '-' + hoje.getDate().toString().padStart(2, '0'); console.log(dataFormatada); // Irá exibir a data no formato YYYY-MM-DD",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "01369016-1567-4262-bfa2-fd0da840cb25",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "edb05b01-e601-4ac0-80cc-4dc42e06b034",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Data",
+              "lookupValue": "={{ new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) }}"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "id": "c8f505bb-eba5-47b3-b540-199a0efa6a35",
+      "name": "Google Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2220,
+        660
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6HFnXjlEffzKigp1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "342a29f8-09fb-448a-b0c8-1ef138531ef1",
+      "name": "Loop Over Items1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2440,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "id": "8260d762-91b2-434b-9fda-e2620e3df4a0",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2880,
+        680
+      ],
+      "webhookId": "166ceaf1-a081-41f4-812d-77a76851f27a"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_TL643WxMgoNFglbe105RUom6",
+          "mode": "list",
+          "cachedResultName": "Hacka todo dia"
+        },
+        "prompt": "define",
+        "text": "={{ $('Google Sheets1').item.json.row_number }}{{ $('Google Sheets1').item.json['Nome do evento'] }}{{ $('Google Sheets1').item.json['Descrição'] }}{{ $('Google Sheets1').item.json.link }}{{ $('Google Sheets1').item.json.Data }}",
+        "options": {}
+      },
+      "id": "c6d2625e-a4d1-4284-83c9-9981d0210fdc",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        3140,
+        680
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "jPPIKdjjpCQ4ANY9",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b53ca898-324b-4dfc-aed3-a5b06563e9aa",
+              "leftValue": "={{ $json.row_number }}",
+              "rightValue": 33,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "67f7dd13-3501-454a-a7cf-23484f4e7d1e",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2680,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/customsearch/v1",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyCEgMJJptP2AbAQTGCkBjY9A2uzYfxcWKw"
+            },
+            {
+              "name": "cx",
+              "value": "43e5022f5883d4e03"
+            },
+            {
+              "name": "q",
+              "value": "allintitle: (Hackathon OR Inovathon) -disputaram, -promoveu, -realizou, -ocorreu, -encerrado, -apresentam, -conquistaram, -conquistam, -ganhadores, -inscrições, -encerradas, -encerra, -apresentaram, -foram, -foi after:2024-10-21 before:2024-10-23"
+            },
+            {
+              "name": "dateRestrict",
+              "value": "d3"
+            },
+            {
+              "name": "sort",
+              "value": "date"
+            },
+            {
+              "name": "gl",
+              "value": "br"
+            },
+            {
+              "name": "lr",
+              "value": "lang_pt"
+            },
+            {
+              "name": "start",
+              "value": "11"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e1f4872a-571c-473c-bcad-1f285a549ecb",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $('Loop Over Items2').context['done'] }}"
+        }
+      },
+      "id": "c070faa4-3ff9-409a-b040-24a071c300d4",
+      "name": "Loop Over Items2",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1560,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome do evento": "={{ $json.title }}",
+            "Descrição": "={{ $json.snippet }}",
+            "link": "={{ $json.link }}",
+            "Data": "={{ new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome do evento",
+              "displayName": "Nome do evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Descrição",
+              "displayName": "Descrição",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hoje",
+              "displayName": "Hoje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3a278378-f70c-42d9-a596-f470ef9c92b1",
+      "name": "Google Sheets2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2040,
+        900
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6HFnXjlEffzKigp1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54b12afa-f016-40ce-b8e8-4a48aee80c08",
+              "name": "items",
+              "value": "={{ $json.items }}",
+              "type": "array"
+            },
+            {
+              "id": "2b7ea572-878b-4a4f-b76c-dede92281f11",
+              "name": "={{ new Date().toLocaleDateString() }}",
+              "value": "const hoje = new Date(); const dataFormatada = hoje.getFullYear() + '-' + (hoje.getMonth() + 1).toString().padStart(2, '0') + '-' + hoje.getDate().toString().padStart(2, '0'); console.log(dataFormatada); // Irá exibir a data no formato YYYY-MM-DD",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "26208735-c103-4b6b-a7e9-210cf439552e",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "3815d3bb-672d-4613-82ab-3fd2e57a754a",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/customsearch/v1",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyCEgMJJptP2AbAQTGCkBjY9A2uzYfxcWKw"
+            },
+            {
+              "name": "cx",
+              "value": "43e5022f5883d4e03"
+            },
+            {
+              "name": "q",
+              "value": "allintitle: (Hackathon OR Inovathon) -disputaram, -promoveu, -realizou, -ocorreu, -encerrado, -apresentam, -conquistaram, -conquistam, -ganhadores, -inscrições, -encerradas, -encerra, -apresentaram, -foram, -foi after:2024-10-21 before:2024-10-23"
+            },
+            {
+              "name": "dateRestrict",
+              "value": "d3"
+            },
+            {
+              "name": "sort",
+              "value": "date"
+            },
+            {
+              "name": "gl",
+              "value": "br"
+            },
+            {
+              "name": "lr",
+              "value": "lang_pt"
+            },
+            {
+              "name": "start",
+              "value": "21"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dbe49c31-d4f6-4c8a-8ebf-42dbd9e7c159",
+      "name": "HTTP Request3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": "={{ $('Loop Over Items3').context['done'] }}"
+        }
+      },
+      "id": "bd1b8b6d-b334-419a-92ed-22ca3bb20cc9",
+      "name": "Loop Over Items3",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1580,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1emO3elL9PhRd9Pjt3DikXGosV76fnHD1mDe24urShi4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome do evento": "={{ $json.title }}",
+            "Descrição": "={{ $json.snippet }}",
+            "link": "={{ $json.link }}",
+            "Data": "={{ new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome do evento",
+              "displayName": "Nome do evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Descrição",
+              "displayName": "Descrição",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hoje",
+              "displayName": "Hoje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e8099041-7edf-4ce4-bca7-3a8a72bb801b",
+      "name": "Google Sheets3",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2060,
+        1340
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6HFnXjlEffzKigp1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54b12afa-f016-40ce-b8e8-4a48aee80c08",
+              "name": "items",
+              "value": "={{ $json.items }}",
+              "type": "array"
+            },
+            {
+              "id": "2b7ea572-878b-4a4f-b76c-dede92281f11",
+              "name": "={{ new Date().toLocaleDateString() }}",
+              "value": "const hoje = new Date(); const dataFormatada = hoje.getFullYear() + '-' + (hoje.getMonth() + 1).toString().padStart(2, '0') + '-' + hoje.getDate().toString().padStart(2, '0'); console.log(dataFormatada); // Irá exibir a data no formato YYYY-MM-DD",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "86593d2b-89aa-4bb0-9cac-3d455db0d56a",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1140,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "26d843a3-3732-4ccd-af36-50fd5af8cb29",
+      "name": "Split Out2",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.aiblacksolutions.com/message/sendText/hacka_todo_dia ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "ve3vzw2uym76l7dpxih6g"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"120363349425694565@g.us\",\n  \"options\": {\n    \"delay\": 1200,\n    \"presence\": \"composing\",\n    \"linkPreview\": false\n  },\n  \"textMessage\": {\n    \"text\": \"HACKATHONS ACHADOS DATA {{ new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) }}:\"\n  }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "id": "dedc1eff-942e-448b-8252-68d08e519928",
+      "name": "HTTP Request4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        460
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "b282fb4a-c3e4-4d3e-99b7-fcd92e794b7d",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1800,
+        1240
+      ],
+      "webhookId": "eac5e8ac-c092-4243-9b7f-340edad4aa57"
+    },
+    {
+      "parameters": {},
+      "id": "4bd587ac-909f-4bdc-a971-0036079fa7fa",
+      "name": "Wait2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1780,
+        820
+      ],
+      "webhookId": "7bcfd595-d2dc-4502-9b5b-a850ee4b6df4"
+    },
+    {
+      "parameters": {},
+      "id": "8997cbc6-863d-4f33-91e2-1efb16b903cf",
+      "name": "Wait3",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1740,
+        400
+      ],
+      "webhookId": "c02027ab-e2f3-44cf-a523-2d4d4e6f08ce"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 3,
+              "triggerAtHour": 13
+            }
+          ]
+        }
+      },
+      "id": "f10fea84-dbba-4605-a273-cb02a9ae0a18",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 3,
+              "triggerAtHour": 13,
+              "triggerAtMinute": 40
+            }
+          ]
+        }
+      },
+      "id": "da01ab3a-15b2-49b5-aa5d-adba65454e6f",
+      "name": "Schedule Trigger1",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        240
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items3": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c4103b77-112b-4499-9a59-da0d2a4e2823",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9a699375829e24a384f054c639496359c1901a5e855d4cb4a9adaf9f53899a94"
+  },
+  "id": "fWJhgbLmfY3xOKa6",
+  "tags": []
+}
